@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Alchemy - Magical Recipe Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="logo-animation-container">
+        <svg class="logo" viewBox="0 0 100 100">
+            <circle class="logo-circle" cx="50" cy="50" r="45" fill="none" stroke="#2ecc71" stroke-width="2"/>
+            <path class="logo-spoon" d="M30 50 Q50 30 70 50" stroke="#2ecc71" stroke-width="2" fill="none"/>
+            <path class="logo-steam" d="M40 40 Q50 30 60 40" stroke="#2ecc71" stroke-width="2" fill="none"/>
+            <path class="logo-steam-2" d="M45 35 Q50 25 55 35" stroke="#2ecc71" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="logo-text">Kitchen Alchemy</div>
+    </div>
+
+    <div class="container">
+        <nav class="navbar">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search for magical recipes..." id="searchInput">
+                <div class="search-icon">🔍</div>
+            </div>
+            <button class="spoon-btn" onclick="window.location.href='spoon.html'">Search Via Ingredients</button>
+        </nav>
+
+        <div class="main-container">
+            <div class="recipes-box">
+                <h2 class="results-title">Magical Recipes</h2>
+                <div class="recipes-grid" id="recipesList">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="recipeModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-body" id="modalContent">
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
