@@ -1,4 +1,4 @@
-# Recipe Finder
+# Kitchen Alchemy
 
 Recipe Finder is a web application designed to help users discover new recipes quickly and efficiently. This project is built using HTML, CSS, and JavaScript, and it integrates with two popular APIs to provide comprehensive recipe search functionalities.
 
