@@ -1,4 +1,5 @@
 # Kitchen Alchemy
+<img width="1844" height="964" alt="image" src="https://github.com/user-attachments/assets/cf03587e-3525-468c-a94f-44d11a1dcffe" />
 
 Kitchen Alchemy is a web application designed to help users discover new recipes quickly and efficiently. This project is built using HTML, CSS, and JavaScript, and it integrates with two popular APIs to provide comprehensive recipe search functionalities.
 
@@ -21,6 +22,7 @@ The main idea behind Recipe Finder is to offer two distinct ways to search for r
    - Users enter one or more ingredients.
    - A fetch request is sent to the Spoonacular API.
    - The application displays a list of recipes that match the provided ingredients, complete with images and brief descriptions.
+<img width="1844" height="964" alt="foodpic" src="https://github.com/user-attachments/assets/c7887d69-ab6a-41e1-96e5-7f7b48c22d10" />
 
 2. **Recipe Name Search**:
    - Users input a specific recipe name.
