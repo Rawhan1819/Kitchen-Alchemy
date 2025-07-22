@@ -1,5 +1,5 @@
 # Kitchen Alchemy
-<img width="1844" height="964" alt="image" src="https://github.com/user-attachments/assets/cf03587e-3525-468c-a94f-44d11a1dcffe" />
+<img width="1844" height="964" alt="kitchenal" src="https://github.com/user-attachments/assets/6ae62cb8-1484-4f4f-b09f-f4e00da1250d" />
 
 Kitchen Alchemy is a web application designed to help users discover new recipes quickly and efficiently. This project is built using HTML, CSS, and JavaScript, and it integrates with two popular APIs to provide comprehensive recipe search functionalities.
 
@@ -28,6 +28,7 @@ The main idea behind Recipe Finder is to offer two distinct ways to search for r
    - Users input a specific recipe name.
    - The Recipe Ninja API is queried using the provided name.
    - Detailed recipe information is displayed, including ingredients, preparation steps, and images.
+<img width="1844" height="964" alt="byname" src="https://github.com/user-attachments/assets/ed56972f-cfff-4f9f-9a00-441642fc010d" />
 
 ## Getting Started
 
