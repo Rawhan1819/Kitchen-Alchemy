@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gemini AI Chatbot</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --accent-color: #FF5722;
+            --user-msg-color: #E8F5E9;
+            --bot-msg-color: #FFFFFF;
+            --text-color: #333333;
+            --secondary-text: #757575;
+            --border-color: #EEEEEE;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --background: #F9FBF9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulse 15s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(0%, 0%) scale(1);
+            }
+
+            50% {
+                transform: translate(5%, 10%) scale(1.1);
+            }
+
+            100% {
+                transform: translate(0%, 0%) scale(1);
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--background);
+            scroll-behavior: smooth;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            position: relative;
+            box-shadow: 0 1px 2px var(--shadow-color);
+            animation-duration: 0.4s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .user-message {
+            background-color: var(--user-msg-color);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+            animation-name: userMessageIn;
+        }
+
+        .bot-message {
+            background-color: var(--bot-msg-color);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+            animation-name: botMessageIn;
+        }
+
+        @keyframes userMessageIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes botMessageIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #user-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.4) 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.5s;
+        }
+
+        button:active::after {
+            transform: scale(0, 0);
+            opacity: 0.3;
+            transition: 0s;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            margin-bottom: 16px;
+            color: var(--secondary-text);
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin: 0 3px;
+            opacity: 0.6;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation: bounce 1.4s infinite ease-in-out 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation: bounce 1.4s infinite ease-in-out 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .status {
+            padding: 10px 20px;
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--primary-color);
+            margin: 10px 20px;
+            font-size: 14px;
+            color: var(--text-color);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s forwards;
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .typing {
+            display: flex;
+            align-items: center;
+            background-color: var(--bot-msg-color);
+            width: fit-content;
+            border-radius: 18px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 2px var(--shadow-color);
+            animation: fadeInOut 1.5s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .user-avatar,
+        .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+
+        .user-avatar {
+            background-color: var(--accent-color);
+        }
+
+        .bot-avatar {
+            background-color: var(--primary-color);
+        }
+
+        .message-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            animation-duration: 0.4s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+            transform: translateY(10px);
+            animation-name: messageIn;
+        }
+
+        @keyframes messageIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        .dark-theme {
+            --primary-color: #66BB6A;
+            --primary-dark: #43A047;
+            --primary-light: #81C784;
+            --accent-color: #FF7043;
+            --user-msg-color: #2E7D32;
+            --bot-msg-color: #263238;
+            --text-color: #ECEFF1;
+            --secondary-text: #B0BEC5;
+            --border-color: #37474F;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --background: #121212;
+        }
+
+        .dark-theme body {
+            background-color: #121212;
+        }
+
+        .dark-theme .container {
+            background-color: #1E1E1E;
+        }
+
+        .dark-theme .input-container {
+            background-color: #1E1E1E;
+        }
+
+        .dark-theme #user-input {
+            background-color: #263238;
+            color: #ECEFF1;
+            border-color: #37474F;
+        }
+
+        .dark-theme .message {
+            color: white;
+        }
+
+        .dark-theme .status {
+            background-color: rgba(102, 187, 106, 0.1);
+        }
+
+        .support-text {
+            font-size: 12px;
+            color: var(--secondary-text);
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gemini AI Chatbot</h1>
+            <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+
+        <div class="status" id="status">Ready to assist with your questions!</div>
+
+        <div class="chat-container" id="chat-container">
+            <div class="message-container">
+                <div class="bot-avatar">G</div>
+                <div class="message bot-message">
+                    Hello! I'm your  AI assistant. How can I help you today?
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <button id="send-btn">Send</button>
+        </div>
+
+        <div class="support-text">
+            Powered by Gemini AI • Responses are generated by AI and may not always be accurate
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-btn');
+        const statusElement = document.getElementById('status');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Your Gemini API Key - Replace this with your actual API key
+        const API_KEY = "AIzaSyDOavuG70BoUMjaGHLoDin7B0ockhAMIF8";
+        // Updated to the correct model name and endpoint
+        const API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent";
+
+
+        // Chat history to maintain context
+        let chatHistory = [
+            { role: "model", parts: [{ text: "Hello! I'm your nutrition  AI assistant. How can I help you today?" }] }
+        ];
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            themeToggle.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+        });
+
+        // Add a message to the chat
+        function addMessage(text, isUser = false) {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container');
+
+            const avatar = document.createElement('div');
+            avatar.classList.add(isUser ? 'user-avatar' : 'bot-avatar');
+            avatar.textContent = isUser ? 'U' : 'G';
+
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = text;
+
+            messageContainer.appendChild(avatar);
+            messageContainer.appendChild(messageDiv);
+
+            chatContainer.appendChild(messageContainer);
+
+            // Apply staggered animations
+            setTimeout(() => {
+                messageContainer.style.animationDelay = '0.1s';
+                messageContainer.style.animationName = 'messageIn';
+            }, 100);
+
+            // Scroll to bottom
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 100);
+
+            // Add to chat history
+            chatHistory.push({
+                role: isUser ? "user" : "model",
+                parts: [{ text: text }]
+            });
+        }
+
+        // Show loading indicator with animation
+        function showLoading() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('message-container');
+            typingDiv.id = 'loading-container';
+
+            const botAvatar = document.createElement('div');
+            botAvatar.classList.add('bot-avatar');
+            botAvatar.textContent = 'G';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('typing');
+            loadingDiv.id = 'loading';
+
+            const dotsDiv = document.createElement('div');
+            dotsDiv.classList.add('loading-dots');
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('span');
+                dotsDiv.appendChild(dot);
+            }
+
+            loadingDiv.appendChild(dotsDiv);
+            typingDiv.appendChild(botAvatar);
+            typingDiv.appendChild(loadingDiv);
+
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Remove loading indicator
+        function hideLoading() {
+            const loadingContainer = document.getElementById('loading-container');
+            if (loadingContainer) {
+                loadingContainer.remove();
+            }
+        }
+
+        // Send text to Gemini AI API
+        async function sendToGemini(text) {
+            showLoading();
+
+            // Set status
+            statusElement.textContent = "Getting response from Gemini...";
+
+            try {
+                // Format conversation for Gemini API
+                const contents = [
+                    {
+                        role: "user",
+                        parts: [{ text: text }]
+                    }
+                ];
+
+                // Create the request payload
+                const requestBody = {
+                    contents: contents,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 800,
+                    }
+                };
+
+                console.log("Sending request:", JSON.stringify(requestBody));
+
+                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+                console.log("API Response:", data);
+
+                hideLoading();
+
+                // Reset status
+                statusElement.textContent = "Ready to assist with your questions!";
+
+                // Check for different possible response formats
+                if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                    // Check if the content has parts
+                    if (data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+                        const botReply = data.candidates[0].content.parts[0].text;
+                        addMessage(botReply);
+                    } else if (data.candidates[0].content.text) {
+                        // Direct text property
+                        addMessage(data.candidates[0].content.text);
+                    } else {
+                        addMessage("I received a response but couldn't process it correctly.");
+                    }
+                } else if (data.error) {
+                    // Handle API error
+                    console.error("API Error:", data.error);
+                    addMessage(`Sorry, there was an error: ${data.error.message || "Unknown error"}`);
+
+                    // Show detailed error in console for debugging
+                    if (data.error.details) {
+                        console.error("Error details:", data.error.details);
+                    }
+                } else {
+                    addMessage("I'm having trouble connecting to my brain right now. Could you try again?");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                hideLoading();
+
+                // Update status
+                statusElement.textContent = "Connection issue. Please try again.";
+
+                // Show a fallback message
+                addMessage("I'm having trouble processing your request. Could you try again later?");
+            }
+        }
+
+        // Handle send button click
+        sendButton.addEventListener('click', () => {
+            const text = userInput.value.trim();
+            if (text) {
+                addMessage(text, true);
+
+                // Add button press animation
+                sendButton.classList.add('button-pressed');
+                setTimeout(() => {
+                    sendButton.classList.remove('button-pressed');
+                }, 200);
+
+                // Call the Gemini API
+                sendToGemini(text);
+
+                userInput.value = '';
+            }
+        });
+
+        // Handle Enter key press
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Focus input on page load
+        setTimeout(() => {
+            userInput.focus();
+        }, 1000);
+    </script>
+</body>
+
+</html>
