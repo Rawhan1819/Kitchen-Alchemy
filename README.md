@@ -1,7 +1,7 @@
 # Kitchen Alchemy
-<img width="1844" height="964" alt="kitchenal" src="https://github.com/user-attachments/assets/6ae62cb8-1484-4f4f-b09f-f4e00da1250d" />
-
 Kitchen Alchemy is a web application designed to help users discover new recipes quickly and efficiently. This project is built using HTML, CSS, and JavaScript, and it integrates with two popular APIs to provide comprehensive recipe search functionalities.
+
+<img width="1844" height="964" alt="kitchenal" src="https://github.com/user-attachments/assets/6ae62cb8-1484-4f4f-b09f-f4e00da1250d" />
 
 ## Project Overview
 
